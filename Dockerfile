@@ -2,25 +2,18 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copiar tudo
+# Copiar tudo que existe
 COPY . .
 
-# Tentar instalar na raiz primeiro (em caso de ser monorepo)
-RUN npm install --ignore-scripts 2>/dev/null || true
+# Verificar o que foi copiado
+RUN ls -la
 
-# Depois ir para a API
-WORKDIR /app/apps/api
+# Tentar instalar - será na pasta correta automaticamente
+RUN npm install 2>&1 || (find . -name package.json -type f | head -1 | xargs dirname | xargs -I {} bash -c "cd {} && npm install")
 
-# Instalar dependências da API
-RUN npm install
-
-# Compilar TypeScript
-RUN npm run build
-
-# Voltar para raiz para executar
-WORKDIR /app/apps/api
+# Build
+RUN npm run build 2>&1 || (find . -name "dist" -type d | head -1 | xargs dirname | xargs -I {} bash -c "cd {} && npm run build")
 
 EXPOSE 3000
 
-# Usar node diretamente no arquivo compilado
 CMD ["node", "dist/index.js"]
