@@ -1,183 +1,122 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import {
-  ArrowRight,
-  MessageSquare,
-  Settings,
-  Zap,
-  BarChart3,
-  Lock,
-  Smartphone,
-} from "lucide-react";
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Navigation */}
-      <nav className="border-b border-slate-700/50 bg-slate-950/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-green-400 to-emerald-600 shadow-lg shadow-green-500/30">
-              <MessageSquare className="h-6 w-6 text-white" />
-            </div>
-            <h1 className="text-lg font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-              IPTV Chatbot
-            </h1>
-          </div>
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 px-4 py-2 font-medium text-white hover:from-green-600 hover:to-emerald-700 transition-all"
-          >
-            Acessar Painel
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-blue-600">
+      {/* Header */}
+      <div className="text-center py-16 px-4">
+        <div className="flex justify-center mb-6">
+          <div className="text-7xl">🤖</div>
         </div>
-      </nav>
-
-      {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-purple-500/10 to-emerald-500/10 blur-3xl"></div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
-          <div className="text-center">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Chatbot Automático para
-              <span className="bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
-                {" "}
-                Vendas de IPTV
-              </span>
-            </h2>
-
-            <p className="text-lg md:text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-              Atenda seus clientes 24/7 com mensagens automáticas personalizadas.
-              Configure, customize e envie campanhas de forma simples e eficiente.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 px-8 py-3 font-medium text-white hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg shadow-green-500/30"
-              >
-                Ir para Dashboard
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-
-              <a
-                href="#features"
-                className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-600 px-8 py-3 font-medium text-white hover:bg-slate-800 transition-colors"
-              >
-                Conhecer Recursos
-              </a>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 md:gap-8 max-w-2xl mx-auto">
-              <div className="rounded-lg border border-slate-700/50 bg-slate-800/30 p-4 backdrop-blur-sm">
-                <p className="text-2xl md:text-3xl font-bold text-green-400">245</p>
-                <p className="text-xs md:text-sm text-slate-400 mt-1">
-                  Contatos Cadastrados
-                </p>
-              </div>
-              <div className="rounded-lg border border-slate-700/50 bg-slate-800/30 p-4 backdrop-blur-sm">
-                <p className="text-2xl md:text-3xl font-bold text-blue-400">38</p>
-                <p className="text-xs md:text-sm text-slate-400 mt-1">
-                  Chats Ativos
-                </p>
-              </div>
-              <div className="rounded-lg border border-slate-700/50 bg-slate-800/30 p-4 backdrop-blur-sm">
-                <p className="text-2xl md:text-3xl font-bold text-purple-400">
-                  145
-                </p>
-                <p className="text-xs md:text-sm text-slate-400 mt-1">
-                  Clientes Convertidos
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <h1 className="text-5xl font-bold text-white mb-3">WhatsApp Chatbot</h1>
+        <p className="text-xl text-blue-100">Painel de Controle em Tempo Real</p>
       </div>
 
-      {/* Features Section */}
-      <section id="features" className="relative py-20 md:py-32 border-t border-slate-700/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Recursos Poderosos
-            </h3>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              Tudo que você precisa para gerenciar seus clientes e enviar
-              mensagens automáticas
-            </p>
+      {/* Cards Grid */}
+      <div className="max-w-7xl mx-auto px-4 pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {/* Card 1: Contatos Totais */}
+          <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-blue-600">👥 Contatos Totais</h3>
+              </div>
+            </div>
+            <p className="text-5xl font-bold text-blue-600 mb-4">--</p>
+            <p className="text-gray-600 text-sm mb-6">Usuários cadastrados no sistema</p>
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+              Atualizar
+            </button>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: Zap,
-                title: "WhatsApp Business",
-                description:
-                  "Conecte sua conta WhatsApp Business em poucos cliques",
-              },
-              {
-                icon: MessageSquare,
-                title: "Editar Mensagens",
-                description:
-                  "Customize todas as mensagens enviadas aos seus clientes",
-              },
-              {
-                icon: Smartphone,
-                title: "Enviar Campanhas",
-                description: "Crie e envie campanhas para seus contatos",
-              },
-              {
-                icon: BarChart3,
-                title: "Analytics",
-                description: "Acompanhe métricas de envio e engajamento",
-              },
-            ].map((feature, i) => (
-              <div
-                key={i}
-                className="rounded-lg border border-slate-700/50 bg-gradient-to-br from-slate-800/50 to-slate-900/50 p-6 backdrop-blur-sm hover:border-slate-600/50 transition-all"
-              >
-                <feature.icon className="h-8 w-8 text-green-400 mb-4" />
-                <h4 className="text-lg font-semibold text-white mb-2">
-                  {feature.title}
-                </h4>
-                <p className="text-sm text-slate-400">{feature.description}</p>
+          {/* Card 2: Conversas Ativas */}
+          <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-blue-600">💬 Conversas Ativas</h3>
               </div>
-            ))}
+            </div>
+            <p className="text-5xl font-bold text-blue-600 mb-4">20</p>
+            <p className="text-gray-600 text-sm mb-6">Chats em andamento</p>
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+              Atualizar
+            </button>
+          </div>
+
+          {/* Card 3: Tickets Abertos */}
+          <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-pink-600">🎫 Tickets Abertos</h3>
+              </div>
+            </div>
+            <p className="text-5xl font-bold text-pink-600 mb-4">--</p>
+            <p className="text-gray-600 text-sm mb-6">Suporte pendente</p>
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+              Atualizar
+            </button>
+          </div>
+
+          {/* Card 4: Receita */}
+          <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-orange-600">🍊 Receita (Mês)</h3>
+              </div>
+            </div>
+            <p className="text-4xl font-bold text-orange-600 mb-4">R$ --</p>
+            <p className="text-gray-600 text-sm mb-6">Pagamentos processados</p>
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+              Atualizar
+            </button>
+          </div>
+
+          {/* Card 5: Planos Ativos */}
+          <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-green-600">✅ Planos Ativos</h3>
+              </div>
+            </div>
+            <p className="text-5xl font-bold text-green-600 mb-4">30</p>
+            <p className="text-gray-600 text-sm mb-6">Assinaturas em vigor</p>
+            <button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+              Atualizar
+            </button>
+          </div>
+
+          {/* Card 6: Status API */}
+          <div className="bg-white rounded-xl shadow-lg p-8 hover:shadow-2xl transition-all">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-red-600">🚀 Status API</h3>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-4 h-4 rounded-full bg-red-500"></div>
+              <p className="text-lg font-semibold text-red-600">API Offline</p>
+            </div>
+            <p className="text-gray-600 text-sm mb-6">Status do servidor</p>
+            <button className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+              Verificar
+            </button>
           </div>
         </div>
-      </section>
 
-      {/* CTA Section */}
-      <section className="relative py-20 md:py-32 border-t border-slate-700/50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Pronto para começar?
-          </h3>
-
-          <p className="text-lg text-slate-400 mb-8">
-            Acesse seu painel de controle e configure o WhatsApp Business agora mesmo
-          </p>
-
+        {/* Botão para Dashboard */}
+        <div className="flex justify-center gap-4">
           <Link
             href="/dashboard"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 px-8 py-4 text-lg font-semibold text-white hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg shadow-green-500/30"
+            className="inline-flex items-center justify-center gap-2 bg-white text-blue-600 font-semibold py-3 px-8 rounded-lg hover:bg-gray-100 transition-colors"
           >
-            Acessar Dashboard
+            Ir para Dashboard
             <ArrowRight className="h-5 w-5" />
           </Link>
         </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-700/50 bg-slate-950/50 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center text-slate-400">
-          <p>&copy; 2024 IPTV Chatbot. Todos os direitos reservados.</p>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 }
