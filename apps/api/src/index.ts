@@ -11,9 +11,9 @@ const connections = new Map<string, any>();
 
 // ✅ Servir HTML na raiz
 app.get("/", async (request, reply) => {
-  const html = `<html><body style="font-family:Arial;text-align:center;background:#667eea;color:white;padding:50px"><h1>🤖 WhatsApp Chatbot API</h1><p style="font-size:20px">✓ ONLINE</p><p>Sistema funcionando e pronto para requisições!</p><button onclick="fetch('/health').then(r=>r.json()).then(d=>alert(JSON.stringify(d)))">Verificar Status</button></body></html>`;
-  reply.header("Content-Type", "text/html");
-  return html;
+  const html = `<html><body style="font-family:Arial;text-align:center;background:#667eea;color:white;padding:50px"><h1>🤖 WhatsApp Chatbot API</h1><p style="font-size:20px">✓ ONLINE</p><p>Sistema funcionando!</p></body></html>`;
+  reply.type('text/html');
+  reply.send(html);
 });
 
 // ✅ Health Check
