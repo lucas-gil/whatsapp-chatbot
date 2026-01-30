@@ -690,27 +690,29 @@ app.get('/', (req, res) => {
 });
 
 // ===== SERVER START =====
-app.listen(PORT, () => {
-  console.log('');
-  console.log('╔════════════════════════════════════════════════╗');
-  console.log('║  🤖 WhatsApp Chatbot API - COMPLETO            ║');
-  console.log('║  ⚡ Com IA Gemini + Vendas Automáticas         ║');
-  console.log('║  🚀 Rodando em http://0.0.0.0:' + PORT + '            ║');
-  console.log('╚════════════════════════════════════════════════╝');
-  console.log('');
-  console.log('✅ SISTEMAS ATIVADOS:');
-  console.log('   • Conexão WhatsApp Real');
-  console.log('   • Envio em Massa (Broadcast)');
-  console.log('   • IA Gemini Integrada');
-  console.log('   • Automação de Vendas');
-  console.log('   • CRM com Contatos');
-  console.log('');
-  console.log('🔗 ENDPOINTS PRINCIPAIS:');
-  console.log('   POST /api/whatsapp/start-session');
-  console.log('   POST /api/whatsapp/send-message');
-  console.log('   POST /api/whatsapp/broadcast');
-  console.log('   POST /api/sales/start-flow');
-  console.log('   GET  /api/contacts');
-  console.log('   GET  /health');
-  console.log('');
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log('✅ API rodando em http://0.0.0.0:' + PORT);
+});
+
+// Tratamento de sinais
+process.on('SIGTERM', () => {
+  console.log('SIGTERM recebido, encerrando gracefully...');
+  server.close(() => {
+    console.log('Servidor encerrado');
+    process.exit(0);
+  });
+});
+
+process.on('SIGINT', () => {
+  console.log('SIGINT recebido, encerrando gracefully...');
+  server.close(() => {
+    console.log('Servidor encerrado');
+    process.exit(0);
+  });
+});
+
+// Tratamento de erros não capturados
+process.on('uncaughtException', (err) => {
+  console.error('Erro não capturado:', err);
+  process.exit(1);
 });
