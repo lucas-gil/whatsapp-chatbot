@@ -1,32 +1,66 @@
-import Fastify from "fastify";
-import cors from "@fastify/cors";
+import express from "express";
+import cors from "cors";
 import QRCode from "qrcode";
 
-const app = Fastify({ logger: true });
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.register(cors, { origin: true });
+app.use(cors());
+app.use(express.json());
 
 // Armazenar conexões
 const connections = new Map<string, any>();
 
-// ✅ Servir HTML na raiz
-app.get("/", async (request, reply) => {
-  const html = `<html><body style="font-family:Arial;text-align:center;background:#667eea;color:white;padding:50px"><h1>🤖 WhatsApp Chatbot API</h1><p style="font-size:20px">✓ ONLINE</p><p>Sistema funcionando!</p></body></html>`;
-  reply.type('text/html');
-  reply.send(html);
+// ✅ HTML Homepage
+app.get("/", (req, res) => {
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>WhatsApp Chatbot API</title>
+      <style>
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 50px; margin: 0; min-height: 100vh; }
+        .container { max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.1); padding: 40px; border-radius: 10px; }
+        h1 { font-size: 2.5em; margin: 0; }
+        p { font-size: 1.2em; margin: 10px 0; }
+        .status { background: #10b981; padding: 10px 20px; border-radius: 20px; display: inline-block; margin: 20px 0; }
+        button { background: white; color: #667eea; border: none; padding: 15px 30px; border-radius: 5px; font-size: 1em; cursor: pointer; font-weight: bold; margin: 10px 5px; }
+        button:hover { background: #f0f0f0; }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h1>🤖 WhatsApp Chatbot API</h1>
+        <div class="status">✓ ONLINE</div>
+        <p>Sistema de automação WhatsApp com IA</p>
+        <p>Versão 1.0.0 | Node.js + Express</p>
+        
+        <p style="margin-top: 30px;"><strong>Endpoints:</strong></p>
+        <ul style="text-align: left; display: inline-block;">
+          <li>/health - Status da API</li>
+          <li>/api/whatsapp/start-session - Gerar QR Code</li>
+          <li>/api/whatsapp/status/:sessionId - Status da sessão</li>
+        </ul>
+        
+        <p style="margin-top: 30px;">
+          <button onclick="fetch('/health').then(r => r.json()).then(d => alert(JSON.stringify(d, null, 2)))">Testar Status</button>
+        </p>
+      </div>
+    </body>
+    </html>
+  `;
+  res.send(html);
 });
 
 // ✅ Health Check
-app.get("/health", async () => {
-  return { status: "ok", message: "API funcionando!" };
+app.get("/health", (req, res) => {
+  res.json({ status: "ok", message: "API funcionando!", timestamp: new Date() });
 });
 
-// ✅ Gerar QR Code (mock para testes)
-app.post("/api/whatsapp/start-session", async (request, reply) => {
-  const sessionId = Date.now().toString();
-  
+// ✅ QR Code Session
+app.post("/api/whatsapp/start-session", async (req, res) => {
   try {
-    // Gerar QR code fake para testes
+    const sessionId = Date.now().toString();
     const qrDataUrl = await QRCode.toDataURL(sessionId);
     
     const conn = {
@@ -38,40 +72,44 @@ app.post("/api/whatsapp/start-session", async (request, reply) => {
     
     connections.set(sessionId, conn);
     
-    reply.send({
+    res.json({
       success: true,
       sessionId,
       qrCode: qrDataUrl,
-      message: "✓ QR Code gerado!"
+      message: "QR Code gerado com sucesso!"
     });
   } catch (error) {
     const errMsg = error instanceof Error ? error.message : String(error);
-    reply.status(500).send({
+    res.status(500).json({
       success: false,
       error: errMsg
     });
   }
 });
 
-// ✅ Status da sessão
-app.get("/api/whatsapp/status/:sessionId", async (request, reply) => {
-  const { sessionId } = request.params as any;
+// ✅ Session Status
+app.get("/api/whatsapp/status/:sessionId", (req, res) => {
+  const { sessionId } = req.params;
   const conn = connections.get(sessionId);
   
   if (!conn) {
-    return reply.status(404).send({
+    return res.status(404).json({
       success: false,
-      error: "Sessão não encontrada"
+      message: "Sessão não encontrada"
     });
   }
   
-  reply.send({
+  res.json({
     success: true,
     sessionId,
     isConnected: conn.isConnected,
-    phoneNumber: conn.phoneNumber,
-    state: conn.isConnected ? "connected" : "waiting_scan"
+    phoneNumber: conn.phoneNumber || "Não conectado"
   });
+});
+
+// ✅ Start Server
+app.listen(PORT, () => {
+  console.log(`✅ API rodando em http://0.0.0.0:${PORT}`);
 });
 
 // ✅ Listar mensagens
