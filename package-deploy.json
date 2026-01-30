@@ -1,0 +1,14 @@
+{
+  "name": "whatsapp-chatbot-deploy",
+  "version": "1.0.0",
+  "description": "WhatsApp Chatbot API - Deploy Version",
+  "main": "apps/api/dist/index.js",
+  "scripts": {
+    "start": "cd apps/api && npm install && npm run build && npm start",
+    "build": "cd apps/api && npm install && npm run build",
+    "dev": "cd apps/api && npm run dev"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
