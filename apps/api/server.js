@@ -1272,15 +1272,15 @@ app.get('/', (req, res) => {
         return;
       }
       
-      list.innerHTML = autoResponses.map((resp, idx) => \`
-        <div class="status-item">
-          <div style="flex: 1;">
-            <strong style="color: #667eea;">\${resp.trigger}</strong>
-            <p style="font-size: 0.85em; color: #6b7280; margin-top: 3px;">\${resp.response.substring(0, 60)}...</p>
-          </div>
-          <button class="small" onclick="removeResponse(\${idx})">✕ Remover</button>
-        </div>
-      \`).join('');
+      list.innerHTML = autoResponses.map((resp, idx) => {
+        return '<div class="status-item">' +
+          '<div style="flex: 1;">' +
+          '<strong style="color: #667eea;">' + resp.trigger + '</strong>' +
+          '<p style="font-size: 0.85em; color: #6b7280; margin-top: 3px;">' + resp.response.substring(0, 60) + '...</p>' +
+          '</div>' +
+          '<button class="small" onclick="removeResponse(' + idx + ')">✕ Remover</button>' +
+          '</div>';
+      }).join('');
     }
     
     function removeResponse(idx) {
@@ -1351,15 +1351,15 @@ app.get('/', (req, res) => {
         return;
       }
       
-      list.innerHTML = contacts.map((c, i) => \`
-        <div class="status-item">
-          <div>
-            <strong style="color: #667eea;">\${c.name}</strong>
-            <p style="font-size: 0.8em; color: #9ca3af;">\${c.phone}</p>
-          </div>
-          <span class="badge info">\${c.stage}</span>
-        </div>
-      \`).join('');
+      list.innerHTML = contacts.map((c, i) => {
+        return '<div class="status-item">' +
+          '<div>' +
+          '<strong style="color: #667eea;">' + c.name + '</strong>' +
+          '<p style="font-size: 0.8em; color: #9ca3af;">' + c.phone + '</p>' +
+          '</div>' +
+          '<span class="badge info">' + c.stage + '</span>' +
+          '</div>';
+      }).join('');
     }
     
     function updateCRMStats() {
@@ -1412,16 +1412,15 @@ app.get('/', (req, res) => {
         return;
       }
       
-      const priorityColor = { 'baixa': 'info', 'media': '#fbbf24', 'alta': 'error', 'urgente': 'error' };
-      list.innerHTML = tickets.map((t, i) => \`
-        <div class="status-item">
-          <div style="flex: 1;">
-            <strong style="color: #667eea;">#\${t.id} - \${t.subject}</strong>
-            <p style="font-size: 0.8em; color: #9ca3af; margin-top: 2px;">\${t.createdAt}</p>
-          </div>
-          <span class="badge info">\${t.priority}</span>
-        </div>
-      \`).join('');
+      list.innerHTML = tickets.map((t, i) => {
+        return '<div class="status-item">' +
+          '<div style="flex: 1;">' +
+          '<strong style="color: #667eea;">#' + t.id + ' - ' + t.subject + '</strong>' +
+          '<p style="font-size: 0.8em; color: #9ca3af; margin-top: 2px;">' + t.createdAt + '</p>' +
+          '</div>' +
+          '<span class="badge info">' + t.priority + '</span>' +
+          '</div>';
+      }).join('');
     }
     
     // ===== PAGAMENTOS =====
@@ -1434,17 +1433,16 @@ app.get('/', (req, res) => {
         return;
       }
       
-      const link = \`https://mercadopago.com.br/payment/\${Math.random() * 100000 | 0}\`;
+      const link = 'https://mercadopago.com.br/payment/' + (Math.random() * 100000 | 0);
       const paymentsList = document.getElementById('paymentsList');
-      paymentsList.innerHTML = \`
-        <div class="status-item">
-          <div>
-            <strong style="color: #667eea;">Link de Pagamento</strong>
-            <p style="font-size: 0.8em; color: #9ca3af;">R$ \${amount} | \${desc}</p>
-            <p style="margin-top: 5px;"><a href="\${link}" target="_blank" style="color: #667eea;">📎 Copiar Link</a></p>
-          </div>
-        </div>
-      \`;
+      paymentsList.innerHTML = 
+        '<div class="status-item">' +
+        '<div>' +
+        '<strong style="color: #667eea;">Link de Pagamento</strong>' +
+        '<p style="font-size: 0.8em; color: #9ca3af;">R$ ' + amount + ' | ' + desc + '</p>' +
+        '<p style="margin-top: 5px;"><a href="' + link + '" target="_blank" style="color: #667eea;">📎 Copiar Link</a></p>' +
+        '</div>' +
+        '</div>';
       addLog('Link de pagamento gerado: R$ ' + amount);
     }
     
@@ -1470,7 +1468,7 @@ app.get('/', (req, res) => {
     async function startSalesFlow() {
       const sessionId = sessions[0]?.id || 'principal';
       const contact = document.getElementById('recipientPhone').value;
-      const product = document.getElementById('messageText').value;
+      const product = document.getElementById('productName').value;
       
       if (!contact || !product) {
         alert('Preencha contato e produto!');
@@ -1491,8 +1489,8 @@ app.get('/', (req, res) => {
         const data = await response.json();
         
         if (data.success) {
-          const flowInfo = data.steps.map(s => \`📌 Passo \${s.step}: \${s.content}\`).join('\\n');
-          alert('🎯 Fluxo de Vendas Iniciado!\\n\\n' + flowInfo);
+          const flowInfo = data.steps.map(s => '📌 Passo ' + s.step + ': ' + s.content).join('\n');
+          alert('🎯 Fluxo de Vendas Iniciado!\n\n' + flowInfo);
           addLog('Fluxo de vendas IA iniciado para: ' + contact);
         }
       } catch (error) {
