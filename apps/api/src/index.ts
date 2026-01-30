@@ -9,6 +9,19 @@ app.register(cors, { origin: true });
 // Armazenar conexões
 const connections = new Map<string, any>();
 
+// ✅ Rota raiz
+app.get("/", async () => {
+  return { 
+    message: "WhatsApp Chatbot API",
+    status: "online",
+    version: "1.0.0",
+    endpoints: {
+      health: "/health",
+      whatsapp: "/api/whatsapp/*"
+    }
+  };
+});
+
 // ✅ Health Check
 app.get("/health", async () => {
   return { status: "ok", message: "API funcionando!" };
