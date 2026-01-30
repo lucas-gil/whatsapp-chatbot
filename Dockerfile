@@ -2,13 +2,14 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY . .
+# Clonar o repositório
+RUN apk add --no-cache git && \
+    git clone https://github.com/lucas-gil/whatsapp-chatbot.git . && \
+    cd apps/api && \
+    npm install && \
+    npm run build
 
 WORKDIR /app/apps/api
-
-RUN npm install
-
-RUN npm run build
 
 EXPOSE 3000
 
