@@ -1,0 +1,126 @@
+import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import { PrismaClient } from "@prisma/client";
+import { logger } from "@/utils/logger";
+
+const prisma = new PrismaClient();
+
+export async function ticketsRoutes(app: FastifyInstance) {
+  /**
+   * POST /api/tickets - Criar ticket
+   */
+  app.post("/api/tickets", async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const { contactId, category, subject, description, attachments } =
+        request.body as any;
+
+      const ticket = await prisma.ticket.create({
+        data: {
+          contactId,
+          category,
+          subject,
+          description,
+          attachments: attachments || [],
+          status: "open",
+          priority: "normal",
+        },
+      });
+
+      logger.info(`🎫 Ticket criado: ${ticket.id}`);
+      return reply.code(201).send(ticket);
+    } catch (error) {
+      logger.error("❌ Erro ao criar ticket:", error);
+      return reply.code(500).send({ error: "Erro ao criar ticket" });
+    }
+  });
+
+  /**
+   * GET /api/tickets - Listar tickets
+   */
+  app.get("/api/tickets", async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const { status, priority, page = 1, limit = 20 } = request.query as any;
+
+      const where: any = {};
+      if (status) where.status = status;
+      if (priority) where.priority = priority;
+
+      const skip = (parseInt(page) - 1) * parseInt(limit);
+
+      const [tickets, total] = await Promise.all([
+        prisma.ticket.findMany({
+          where,
+          skip,
+          take: parseInt(limit),
+          include: { contact: true },
+          orderBy: { createdAt: "desc" },
+        }),
+        prisma.ticket.count({ where }),
+      ]);
+
+      return reply.send({
+        data: tickets,
+        pagination: {
+          total,
+          page: parseInt(page),
+          limit: parseInt(limit),
+          totalPages: Math.ceil(total / parseInt(limit)),
+        },
+      });
+    } catch (error) {
+      logger.error("❌ Erro ao listar tickets:", error);
+      return reply.code(500).send({ error: "Erro ao listar tickets" });
+    }
+  });
+
+  /**
+   * GET /api/tickets/:id - Obter detalhes do ticket
+   */
+  app.get("/api/tickets/:id", async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const { id } = request.params as { id: string };
+
+      const ticket = await prisma.ticket.findUnique({
+        where: { id },
+        include: { contact: true },
+      });
+
+      if (!ticket) {
+        return reply.code(404).send({ error: "Ticket não encontrado" });
+      }
+
+      return reply.send(ticket);
+    } catch (error) {
+      logger.error("❌ Erro ao obter ticket:", error);
+      return reply.code(500).send({ error: "Erro ao obter ticket" });
+    }
+  });
+
+  /**
+   * PATCH /api/tickets/:id - Atualizar ticket
+   */
+  app.patch(
+    "/api/tickets/:id",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const { id } = request.params as { id: string };
+        const { status, priority, notes, assignedTo } = request.body as any;
+
+        const ticket = await prisma.ticket.update({
+          where: { id },
+          data: {
+            ...(status && { status }),
+            ...(priority && { priority }),
+            ...(notes && { notes }),
+            ...(assignedTo && { assignedTo }),
+          },
+        });
+
+        logger.info(`✏️ Ticket ${id} atualizado`);
+        return reply.send(ticket);
+      } catch (error) {
+        logger.error("❌ Erro ao atualizar ticket:", error);
+        return reply.code(500).send({ error: "Erro ao atualizar ticket" });
+      }
+    }
+  );
+}

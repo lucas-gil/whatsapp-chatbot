@@ -1,0 +1,47 @@
+2026/01/26-22:01:15.675 5324 Reusing MANIFEST C:\Users\tranf\whatsapp-chatbot\apps\api\whatsapp-auth\session_1769457103236\session-session_1769457103236\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/01/26-22:01:15.676 5324 Recovering log #41
+2026/01/26-22:01:15.742 5324 Reusing old log C:\Users\tranf\whatsapp-chatbot\apps\api\whatsapp-auth\session_1769457103236\session-session_1769457103236\Default\IndexedDB\https_web.whatsapp.com_0.indexeddb.leveldb/000041.log 
+2026/01/26-22:01:16.404 5610 Level-0 table #47: started
+2026/01/26-22:01:16.462 5610 Level-0 table #47: 1521224 bytes OK
+2026/01/26-22:01:16.492 5610 Delete type=0 #41
+2026/01/26-22:01:17.144 5610 Compacting 1@1 + 2@2 files
+2026/01/26-22:01:17.227 5610 Generated table #48@1: 52413 keys, 2240978 bytes
+2026/01/26-22:01:17.275 5610 Generated table #49@1: 27729 keys, 1304844 bytes
+2026/01/26-22:01:17.275 5610 Compacted 1@1 + 2@2 files => 3545822 bytes
+2026/01/26-22:01:17.277 5610 compacted to: files[ 0 0 3 0 0 0 0 ]
+2026/01/27-19:40:51.083 5324 Level-0 table #51: started
+2026/01/27-19:40:51.161 5324 Level-0 table #51: 1070741 bytes OK
+2026/01/27-19:40:51.168 5324 Delete type=2 #43
+2026/01/27-19:40:51.168 5324 Delete type=2 #44
+2026/01/27-19:40:51.169 5324 Delete type=0 #46
+2026/01/27-19:40:51.169 5324 Delete type=2 #47
+2026/01/27-19:40:51.616 5324 Compacting 1@1 + 2@2 files
+2026/01/27-19:40:51.843 5324 Generated table #52@1: 54757 keys, 2245756 bytes
+2026/01/27-19:40:51.955 5324 Generated table #53@1: 27858 keys, 1389165 bytes
+2026/01/27-19:40:51.955 5324 Compacted 1@1 + 2@2 files => 3634921 bytes
+2026/01/27-19:40:51.963 5324 compacted to: files[ 0 0 3 0 0 0 0 ]
+2026/01/27-19:40:51.964 5324 Delete type=2 #48
+2026/01/27-19:40:51.964 5324 Delete type=2 #49
+2026/01/27-19:40:51.964 5324 Delete type=2 #51
+2026/01/27-19:41:33.927 5610 Level-0 table #55: started
+2026/01/27-19:41:33.951 5610 Level-0 table #55: 1078648 bytes OK
+2026/01/27-19:41:33.952 5610 Delete type=0 #50
+2026/01/27-19:41:33.956 5324 Compacting 1@1 + 2@2 files
+2026/01/27-19:41:34.040 5324 Generated table #56@1: 57115 keys, 2248271 bytes
+2026/01/27-19:41:34.072 5324 Generated table #57@1: 28137 keys, 1513368 bytes
+2026/01/27-19:41:34.072 5324 Compacted 1@1 + 2@2 files => 3761639 bytes
+2026/01/27-19:41:34.073 5324 compacted to: files[ 0 0 3 0 0 0 0 ]
+2026/01/27-19:41:34.073 5324 Delete type=2 #52
+2026/01/27-19:41:34.074 5324 Delete type=2 #53
+2026/01/27-19:41:34.074 5324 Delete type=2 #55
+2026/01/27-19:41:55.262 5324 Level-0 table #59: started
+2026/01/27-19:41:55.341 5324 Level-0 table #59: 1040135 bytes OK
+2026/01/27-19:41:55.343 5324 Delete type=0 #54
+2026/01/27-19:42:15.588 5324 Compacting 1@1 + 2@2 files
+2026/01/27-19:42:15.666 5324 Generated table #60@1: 55278 keys, 2248436 bytes
+2026/01/27-19:42:15.704 5324 Generated table #61@1: 27989 keys, 1416479 bytes
+2026/01/27-19:42:15.704 5324 Compacted 1@1 + 2@2 files => 3664915 bytes
+2026/01/27-19:42:15.705 5324 compacted to: files[ 0 0 3 0 0 0 0 ]
+2026/01/27-19:42:15.706 5324 Delete type=2 #56
+2026/01/27-19:42:15.706 5324 Delete type=2 #57
+2026/01/27-19:42:15.706 5324 Delete type=2 #59

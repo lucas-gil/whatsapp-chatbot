@@ -1,0 +1,147 @@
+🎉 NOVA FUNCIONALIDADE: COLOCAR TOKEN GEMINI NO PAINEL!
+
+═══════════════════════════════════════════════════════════════════════════
+
+✨ AGORA FICOU FÁCIL!
+
+Você NÃO precisa mais abrir PowerShell ou editar arquivo .env!
+
+Tudo está no painel admin agora! 🎯
+
+═══════════════════════════════════════════════════════════════════════════
+
+📍 ONDE COLOCAR O TOKEN:
+
+1. Abra: http://localhost:3001
+
+2. Menu lateral → "Configurações" (agora aparece no topo!)
+
+3. Seção: "🔑 Token Gemini API"
+
+4. Cole sua chave no campo
+
+5. Clique em "Salvar Token"
+
+6. ✅ PRONTO!
+
+═══════════════════════════════════════════════════════════════════════════
+
+🧪 TESTAR O TOKEN (NO MESMO LUGAR):
+
+Depois de salvar, você pode testar de 2 formas:
+
+✅ OPÇÃO 1: Testar Token Gemini
+└─ Clica em "Testar Token"
+└─ Se funcionar, vê a resposta da IA
+└─ Status aparece verde: "🟢 API Gemini OK"
+
+✅ OPÇÃO 2: Testar Todos os Endpoints
+└─ Clica em "Testar Endpoints"
+└─ Testa:
+   - /health
+   - /api/product/data
+   - /api/ai/generate-response
+└─ Mostra se cada um está ✅ OK ou ❌ Erro
+
+═══════════════════════════════════════════════════════════════════════════
+
+🔑 COMO OBTER O TOKEN:
+
+1. Visite: https://aistudio.google.com/
+
+2. Clique em: "Get API Key" (canto superior direito)
+
+3. Selecione: "Create API key in new project"
+
+4. Copie a chave que aparecer:
+   AIzaSyD...xXxXxXxXxXxXxXxXxXxXx
+
+5. Cole no painel em: Configurações → Token Gemini API
+
+═══════════════════════════════════════════════════════════════════════════
+
+💡 NOVOS ENDPOINTS CRIADOS:
+
+POST /api/settings/gemini-key
+├─ Salva o token no servidor
+└─ Body: { key: "sua_chave" }
+
+POST /api/settings/test-gemini
+├─ Testa se o token funciona
+├─ Body: { key: "sua_chave", message: "teste" }
+└─ Retorna: resposta da IA se funcionar
+
+GET /api/settings/status
+├─ Verifica status geral do sistema
+└─ Mostra se Gemini e Produto estão configurados
+
+═══════════════════════════════════════════════════════════════════════════
+
+✅ CHECKLIST:
+
+☑️  Token obtido em aistudio.google.com
+☑️  Acesso ao painel admin (localhost:3001)
+☑️  Vejo opção "Configurações" no menu
+☑️  Colei o token no campo
+☑️  Cliquei "Salvar Token"
+☑️  Testei com "Testar Token"
+☑️  Status mostra: "🟢 API Gemini OK"
+☑️  Testei "Testar Endpoints"
+☑️  Todos os endpoints: ✅ OK
+
+═══════════════════════════════════════════════════════════════════════════
+
+🎯 FLUXO COMPLETO AGORA:
+
+1. Painel Admin (localhost:3001)
+   ↓
+2. Menu → Configurações
+   ↓
+3. Cole Token Gemini
+   ↓
+4. Clique "Salvar Token"
+   ↓
+5. Clique "Testar Token" (opcional)
+   ↓
+6. Menu → Configurar Produto
+   ↓
+7. Preencha dados do produto
+   ↓
+8. Clique "Salvar Configurações"
+   ↓
+9. Teste a IA na mesma página
+   ↓
+✅ PRONTO! Vendedor virtual funcionando!
+
+═══════════════════════════════════════════════════════════════════════════
+
+🔒 SEGURANÇA:
+
+- Token é privado (mostrado com asteriscos)
+- Pode clicar no ícone de olho para ver/ocultar
+- Nunca é salvo em arquivo público
+- Fica apenas na memória do servidor
+
+═══════════════════════════════════════════════════════════════════════════
+
+❓ DÚVIDAS:
+
+P: Preciso reiniciar o servidor após colocar o token?
+R: NÃO! Salva direto na memória e já funciona.
+
+P: E se errar o token?
+R: Sem problema, clica "Testar Token" para confirmar.
+   Se der erro, aparece mensagem clara.
+
+P: Perdi o token, o que faz?
+R: Cria outro em https://aistudio.google.com/
+   Delete o anterior e crie um novo.
+
+P: Posso usar o token em vários computadores?
+R: SIM, mas cada máquina precisa configurar separado.
+
+═══════════════════════════════════════════════════════════════════════════
+
+Próximo passo: Abra http://localhost:3001 → Configurações
+
+Está tudo pronto agora! 🚀

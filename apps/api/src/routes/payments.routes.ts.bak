@@ -1,0 +1,122 @@
+import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import { mercadoPagoService } from "@/services/mercadopago.service";
+import { whatsappService } from "@/services/whatsapp.service";
+import { PrismaClient } from "@prisma/client";
+import { logger } from "@/utils/logger";
+
+const prisma = new PrismaClient();
+
+export async function paymentsRoutes(app: FastifyInstance) {
+  /**
+   * POST /api/payments/create - Criar pagamento
+   */
+  app.post(
+    "/api/payments/create",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const { subscriptionId, contactId, planId } = request.body as any;
+
+        // Buscar plano e contato
+        const [plan, contact] = await Promise.all([
+          prisma.plan.findUnique({ where: { id: planId } }),
+          prisma.contact.findUnique({ where: { id: contactId } }),
+        ]);
+
+        if (!plan || !contact) {
+          return reply
+            .code(404)
+            .send({ error: "Plano ou contato não encontrado" });
+        }
+
+        // Criar preferência no Mercado Pago
+        const { checkoutUrl, preferenceId } = await mercadoPagoService.createPreference(
+          planId,
+          plan.name,
+          plan.price,
+          contact.phone,
+          contact.name
+        );
+
+        // Salvar payment no banco
+        const payment = await prisma.payment.create({
+          data: {
+            subscriptionId,
+            amount: plan.price,
+            status: "pending",
+            mercadopagoId: preferenceId,
+            paymentMethod: "mercadopago",
+          },
+        });
+
+        // Enviar link via WhatsApp
+        await whatsappService.sendText(
+          contact.phone,
+          `💳 Seu link de pagamento chegou!\n\n${checkoutUrl}\n\nClique para completar sua assinatura do plano ${plan.name}.`
+        );
+
+        logger.info(`💰 Pagamento criado: ${payment.id}`);
+
+        return reply.code(201).send({
+          paymentId: payment.id,
+          checkoutUrl,
+          preferenceId,
+        });
+      } catch (error) {
+        logger.error("❌ Erro ao criar pagamento:", error);
+        return reply.code(500).send({ error: "Erro ao criar pagamento" });
+      }
+    }
+  );
+
+  /**
+   * GET /api/payments/:paymentId - Status do pagamento
+   */
+  app.get(
+    "/api/payments/:paymentId",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const { paymentId } = request.params as { paymentId: string };
+
+        const payment = await prisma.payment.findUnique({
+          where: { id: paymentId },
+        });
+
+        if (!payment) {
+          return reply.code(404).send({ error: "Pagamento não encontrado" });
+        }
+
+        return reply.send(payment);
+      } catch (error) {
+        logger.error("❌ Erro ao obter pagamento:", error);
+        return reply.code(500).send({ error: "Erro ao obter pagamento" });
+      }
+    }
+  );
+
+  /**
+   * POST /webhooks/mercadopago - Webhook do Mercado Pago
+   */
+  app.post(
+    "/webhooks/mercadopago",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const result = await mercadoPagoService.processWebhook(request.body);
+
+        // Registrar evento
+        await prisma.webhookEvent.create({
+          data: {
+            eventType: "mercadopago_payment",
+            payload: request.body as any,
+            processed: result.success,
+            error: result.success ? null : result.message,
+          },
+        });
+
+        return reply.code(200).send({ acknowledged: true });
+      } catch (error) {
+        logger.error("❌ Erro ao processar webhook MP:", error);
+        return reply.code(500).send({ error: "Erro ao processar webhook" });
+      }
+    }
+  );
+}

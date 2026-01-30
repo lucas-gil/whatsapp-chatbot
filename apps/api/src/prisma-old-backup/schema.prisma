@@ -1,0 +1,220 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ===== USUÁRIOS =====
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("admin") // admin, moderator, support
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ===== CONTATOS / LEADS =====
+model Contact {
+  id                String   @id @default(cuid())
+  phone             String   @unique
+  name              String?
+  email             String?
+  device            String?   // TV_SMART, SMARTPHONE, etc
+  status            String   @default("prospect") // prospect, lead, negociacao, cliente, encerrado
+  installationProof String?   // URL/caminho da foto de instalação
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  conversations Conversation[]
+  tickets       Ticket[]
+  subscriptions Subscription[]
+
+  @@index([phone])
+  @@index([status])
+}
+
+// ===== CONVERSAS =====
+model Conversation {
+  id        String   @id @default(cuid())
+  contactId String
+  contact   Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  step      String   @default("welcome") // welcome, device_selection, installation, menu, etc
+  stepData  String?   // JSON string - dados específicos do step atual
+  messages  Message[]
+
+  lastActivityAt DateTime @default(now()) @updatedAt
+  timeoutAt      DateTime?
+  createdAt      DateTime @default(now())
+
+  @@index([contactId])
+  @@index([step])
+}
+
+// ===== MENSAGENS =====
+model Message {
+  id             String   @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  sender         String   // "user" ou "bot"
+  type           String   // "text", "image", "video", "interactive_button", "interactive_list"
+  content        String
+  mediaUrl       String?  // URL da mídia se houver
+  mediaPath      String?  // Caminho local se armazenado localmente
+  metadata       String?  // JSON string - dados extra (button_id, etc)
+
+  createdAt      DateTime @default(now())
+
+  @@index([conversationId])
+  @@index([sender])
+}
+
+// ===== PLANOS =====
+model Plan {
+  id            String   @id @default(cuid())
+  name          String   @unique // "Básico", "Pro", "Premium"
+  description   String
+  price         Float    // em centavos (100 = R$ 1,00)
+  billingCycle  Int      // 30 (mensal), 90 (trimestral), 365 (anual)
+  features      String   // JSON string - Array de features
+  active        Boolean  @default(true)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  subscriptions Subscription[]
+
+  @@index([active])
+}
+
+// ===== ASSINATURAS =====
+model Subscription {
+  id            String   @id @default(cuid())
+  contactId     String
+  contact       Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  planId        String
+  plan          Plan     @relation(fields: [planId], references: [id], onDelete: Restrict)
+
+  status        String   @default("trial") // trial, active, expired, cancelled
+  trialEndsAt   DateTime?
+  expiresAt     DateTime?
+
+  mercadopagoId String?   // ID do pagamento MP
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([contactId])
+  @@index([status])
+  @@index([expiresAt])
+}
+
+// ===== PAGAMENTOS =====
+model Payment {
+  id            String   @id @default(cuid())
+  subscriptionId String?
+
+  amount        Float
+  currency      String   @default("BRL")
+  status        String   @default("pending") // pending, approved, rejected, refunded
+
+  mercadopagoId String?  @unique
+  paymentMethod String?  // pix, credit_card, etc
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([status])
+  @@index([mercadopagoId])
+}
+
+// ===== TICKETS / SUPORTE =====
+model Ticket {
+  id          String   @id @default(cuid())
+  contactId   String
+  contact     Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  category    String   // "instalacao", "erro_tecnico", "pagamento", "outro"
+  priority    String   @default("normal") // low, normal, high, urgent
+  status      String   @default("open") // open, in_progress, resolved, closed
+
+  subject     String
+  description String
+  attachments String?  // JSON string - Array de URLs/caminhos
+
+  notes       String?
+  assignedTo  String?  // Admin ID
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([status])
+  @@index([priority])
+  @@index([category])
+}
+
+// ===== BASE DE CONHECIMENTO (FAQ/RAG) =====
+model KnowledgeBase {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   // Markdown/texto completo
+  category  String   // "instalacao", "precos", "suporte", "politicas", etc
+  keywords  String?  // JSON string - para busca
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([active])
+}
+
+// ===== RECOMENDAÇÕES POR DISPOSITIVO =====
+model DeviceRecommendation {
+  id          String   @id @default(cuid())
+  device      String   @unique // TV_SMART, SMARTPHONE, etc
+  description String
+  instructions String // Markdown com passo a passo
+  apps        String?  // JSON string - Array com {name, store_url, logo_url}
+  images      String?  // JSON string - Array de URLs das 3 imagens de exemplo
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([device])
+}
+
+// ===== MENSAGENS/TEXTOS PADRÃO =====
+model StandardMessage {
+  id        String   @id @default(cuid())
+  key       String   @unique // "welcome_text", "menu_text", etc
+  content   String
+  type      String   @default("text") // text, interactive_button, interactive_list
+  metadata  String?  // JSON string - botões, opções, etc
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+}
+
+// ===== WEBHOOKS / EVENTOS =====
+model WebhookEvent {
+  id        String   @id @default(cuid())
+  eventType String   // "message_received", "payment_approved", etc
+  payload   String   // JSON string
+  processed Boolean  @default(false)
+  error     String?
+  createdAt DateTime @default(now())
+
+  @@index([processed])
+  @@index([eventType])
+}

@@ -1,0 +1,51 @@
+[
+  {
+    "id": "session_1768963714189",
+    "phoneNumber": "5511965525479",
+    "state": "connected",
+    "messageCount": 0,
+    "lastActive": "20/01/2026, 23:48:58"
+  },
+  {
+    "id": "session_1768964452883",
+    "phoneNumber": "",
+    "state": "waiting_scan",
+    "messageCount": 0,
+    "lastActive": "23/01/2026, 00:06:27"
+  },
+  {
+    "id": "session_1768964667456",
+    "phoneNumber": "",
+    "state": "waiting_scan",
+    "messageCount": 0,
+    "lastActive": "22/01/2026, 23:43:45"
+  },
+  {
+    "id": "session_1769139670232",
+    "phoneNumber": "",
+    "state": "waiting_scan",
+    "messageCount": 0,
+    "lastActive": "23/01/2026, 00:43:39"
+  },
+  {
+    "id": "session_1769443815336",
+    "phoneNumber": "555192724970",
+    "state": "connected",
+    "messageCount": 4,
+    "lastActive": "26/01/2026, 13:11:14"
+  },
+  {
+    "id": "session_1769444129778",
+    "phoneNumber": "5511965525479",
+    "state": "connected",
+    "messageCount": 0,
+    "lastActive": "26/01/2026, 13:15:54"
+  },
+  {
+    "id": "session_1769457103236",
+    "phoneNumber": "5511965525479",
+    "state": "connected",
+    "messageCount": 0,
+    "lastActive": "26/01/2026, 22:01:18"
+  }
+]

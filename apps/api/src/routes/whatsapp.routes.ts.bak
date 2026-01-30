@@ -1,0 +1,79 @@
+import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import { whatsappService } from "@/services/whatsapp.service";
+import { flowService } from "@/services/flow.service";
+import { logger } from "@/utils/logger";
+import { validateWhatsAppSignature, formatPhoneForWhatsApp } from "@/utils/helpers";
+
+export async function whatsappRoutes(app: FastifyInstance) {
+  /**
+   * GET /webhook - Verificação do webhook
+   */
+  app.get("/webhook", async (request: FastifyRequest, reply: FastifyReply) => {
+    const { mode, token, challenge } = request.query as any;
+
+    if (mode === "subscribe" && token) {
+      const verifyToken = process.env.WHATSAPP_WEBHOOK_VERIFY_TOKEN;
+
+      if (token === verifyToken) {
+        logger.info("✅ Webhook verificado com sucesso");
+        return reply.code(200).send(challenge);
+      } else {
+        logger.warn("❌ Token de verificação inválido");
+        return reply.code(403).send("Token de verificação inválido");
+      }
+    }
+
+    return reply.code(400).send("Modo inválido");
+  });
+
+  /**
+   * POST /webhook - Receber mensagens
+   */
+  app.post("/webhook", async (request: FastifyRequest, reply: FastifyReply) => {
+    const signature = request.headers["x-hub-signature-256"] as string;
+    const payload = JSON.stringify(request.body);
+
+    // Validar assinatura (opcional, mas recomendado em produção)
+    if (signature && !validateWhatsAppSignature(payload, signature)) {
+      logger.warn("❌ Assinatura de webhook inválida");
+      return reply.code(403).send("Assinatura inválida");
+    }
+
+    try {
+      const messages = whatsappService.parseWebhookPayload(request.body);
+
+      for (const msg of messages) {
+        const phone = formatPhoneForWhatsApp(msg.from);
+
+        logger.info(`📨 Mensagem recebida de ${phone}: ${msg.type}`);
+
+        if (msg.type === "text" && msg.text) {
+          // Processar mensagem de texto
+          await flowService.processMessage(phone, msg.text);
+        } else if (
+          msg.type === "interactive" &&
+          msg.interactiveReply
+        ) {
+          // Processar botão ou lista clicada
+          await flowService.processInteractiveReply(
+            phone,
+            msg.interactiveReply.id,
+            msg.interactiveReply.title
+          );
+        } else if (
+          msg.type === "image" ||
+          msg.type === "video"
+        ) {
+          // TODO: Processar mídia
+          logger.info(`📷 Mídia recebida de ${phone}: ${msg.type}`);
+        }
+      }
+
+      // Retornar 200 OK imediatamente
+      return reply.code(200).send({ status: "ok" });
+    } catch (error) {
+      logger.error("❌ Erro ao processar webhook:", error);
+      return reply.code(200).send({ status: "ok" }); // Retornar OK mesmo com erro
+    }
+  });
+}

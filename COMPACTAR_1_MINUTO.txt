@@ -1,0 +1,67 @@
+# 📦 COMPACTAR EM 1 MINUTO
+
+## Jeito Mais Fácil (Clique, Clique, Pronto!)
+
+### Passo 1: Abra Explorador
+Pressione: **Windows + E**
+
+### Passo 2: Navegue
+```
+C:\Users\[SEU_USUARIO]\whatsapp-chatbot
+```
+
+### Passo 3: Clique Direito
+Clique com botão **DIREITO** na pasta **whatsapp-chatbot**
+
+### Passo 4: Compactar
+```
+Enviar Para → Pasta Compactada (ZIP)
+```
+
+### Passo 5: Aguarde
+Aguarde alguns segundos...
+
+### ✅ Pronto!
+Arquivo **whatsapp-chatbot.zip** criado!
+
+---
+
+## 📤 Enviar Para Outro PC
+
+### Opção A: Pendrive
+1. Copie o arquivo `.zip` para o pendrive
+2. Leve para outro PC
+3. Extraia (clique direito → Extrair)
+
+### Opção B: Email
+1. Se arquivo < 25MB, envie por email
+2. No outro PC, baixe
+3. Extraia
+
+### Opção C: Google Drive
+1. Faça upload para Google Drive
+2. Compartilhe o link
+3. No outro PC, baixe
+4. Extraia
+
+---
+
+## 🖥️ No Outro PC
+
+### Extrair
+1. Clique direito no `.zip`
+2. **Extrair**
+3. Escolha a pasta
+
+### Usar
+```bash
+cd whatsapp-chatbot
+npm install
+npm run dev
+```
+
+---
+
+## ✨ Pronto!
+
+Sistema pronto para usar em outro PC! 🚀

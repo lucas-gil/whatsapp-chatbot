@@ -1,0 +1,92 @@
+
+╔════════════════════════════════════════════════════════════════════╗
+║                                                                    ║
+║     🚀  WHATSAPP CHATBOT API - IPTV SALES  🚀                     ║
+║                                                                    ║
+║                ✅ SISTEMA INICIADO COM SUCESSO!                   ║
+║                                                                    ║
+╚════════════════════════════════════════════════════════════════════╝
+
+📱 Servidor em: http://localhost:3000
+
+🔗 ENDPOINTS DISPONÍVEIS:
+
+  GET  /                 → Informações da API
+  GET  /health           → Health check do servidor
+  
+⚡ RECURSOS IMPLEMENTADOS:
+
+  ✅ Serviço de Fluxo (iptv.flow.service.ts)
+     - Processamento de mensagens com 9 etapas
+     - Saudação automática em português
+     - Seleção de planos (Básico, Padrão, Premium)
+     
+  ✅ Templates de Mensagens (iptv.templates.ts)
+     - 20+ mensagens personalizadas em português
+     - Boas-vindas, Planos, Pagamento, Suporte, FAQ
+     
+  ✅ Rotas IPTV (iptv.routes.ts)
+     - Webhook para WhatsApp
+     - Envio de mensagens personalizadas
+     - Contatos e estatísticas
+     
+  ✅ Tipos TypeScript (packages/shared/src/types.ts)
+     - Interfaces para IPTV, Planos, Assinaturas
+     - Tipos de Conversas e Contatos
+
+💳 MÉTODOS DE PAGAMENTO INTEGRADOS:
+   • PIX (com QR Code)
+   • Cartão de Crédito
+   • Boleto Bancário
+
+📊 PLANOS DISPONÍVEIS:
+   • Básico: R$ 9,90/mês
+   • Padrão: R$ 19,90/mês
+   • Premium: R$ 29,90/mês
+
+🔧 CONFIGURAÇÃO NECESSÁRIA:
+
+   1. Configure variáveis de ambiente (.env):
+      - DATABASE_URL=postgresql://...
+      - WHATSAPP_TOKEN=seu_token_aqui
+      - WHATSAPP_PHONE_ID=seu_phone_id
+      - MERCADO_PAGO_TOKEN=seu_token
+
+   2. Crie as tabelas do banco:
+      npx prisma db push
+
+   3. Inicie o servidor:
+      npm start
+
+📚 DOCUMENTAÇÃO:
+
+   Leia os arquivos de documentação para mais detalhes:
+   - COMECE_AGORA.txt - Quick start
+   - IPTV_CHATBOT.md - Documentação técnica
+   - EXEMPLOS_CONVERSAS.md - Exemplos de fluxo
+
+🎯 FLUXO DE CONVERSAÇÃO (9 ETAPAS):
+
+   1️⃣  welcome         → Boas-vindas
+   2️⃣  main_menu       → Menu principal
+   3️⃣  contratar_menu  → Seleção de ação (contratar/renovar/suporte/faq)
+   4️⃣  plano_selecionado → Escolher plano
+   5️⃣  renovacao_verificacao → Verificar assinatura
+   6️⃣  renovacao_pagamento → Processar renovação
+   7️⃣  suporte_menu    → Menu de suporte
+   8️⃣  suporte_detalhes → Detalhes do suporte
+   9️⃣  faq_menu        → Perguntas frequentes
+
+✨ PRÓXIMOS PASSOS:
+
+   1. Teste o endpoint: curl http://localhost:3000/health
+   2. Configure WhatsApp Cloud API
+   3. Envie uma mensagem de teste via WhatsApp
+   4. Monitore os logs da API
+
+═══════════════════════════════════════════════════════════════════════
+
+Para mais informações, acesse a documentação completa no projeto.
+Desenvolvido com ❤️ para vendas de IPTV via WhatsApp
+
+═══════════════════════════════════════════════════════════════════════

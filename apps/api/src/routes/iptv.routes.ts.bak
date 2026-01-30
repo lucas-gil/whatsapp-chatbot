@@ -1,0 +1,204 @@
+import { Router, Request, Response } from "express";
+import { iptvFlowService } from "@/services/iptv.flow.service";
+import { whatsappService } from "@/services/whatsapp.service";
+import { logger } from "@/utils/logger";
+
+const router = Router();
+
+/**
+ * POST /api/iptv/webhook
+ * Receber mensagens do WhatsApp e processar
+ */
+router.post("/webhook", async (req: Request, res: Response) => {
+  try {
+    const payload = req.body;
+
+    if (payload.object === "whatsapp_business_account") {
+      // Processar cada entrada
+      for (const entry of payload.entry || []) {
+        for (const change of entry.changes || []) {
+          const value = change.value;
+
+          // Processar mensagens recebidas
+          if (value.messages) {
+            for (const message of value.messages) {
+              const phone = message.from;
+              const messageId = message.id;
+
+              // Marcar como lida
+              await whatsappService.markAsRead(messageId);
+
+              // Processar tipos de mensagem
+              if (message.type === "text") {
+                const text = message.text?.body || "";
+                await iptvFlowService.processMessage(phone, text);
+              } else if (message.type === "interactive") {
+                const interactive = message.interactive;
+                let buttonId = "";
+                let buttonTitle = "";
+
+                if (interactive.type === "button_reply") {
+                  buttonId = interactive.button_reply?.id || "";
+                  buttonTitle = interactive.button_reply?.title || "";
+                } else if (interactive.type === "list_reply") {
+                  buttonId = interactive.list_reply?.id || "";
+                  buttonTitle = interactive.list_reply?.title || "";
+                }
+
+                if (buttonId && buttonTitle) {
+                  await iptvFlowService.processButtonClick(phone, buttonId, buttonTitle);
+                }
+              }
+            }
+          }
+
+          // Processar status de entrega
+          if (value.statuses) {
+            for (const status of value.statuses) {
+              logger.info(`📊 Status: ${status.status} para mensagem ${status.id}`);
+            }
+          }
+        }
+      }
+    }
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    logger.error("❌ Erro ao processar webhook IPTV:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+/**
+ * POST /api/iptv/send-welcome
+ * Enviar mensagem de boas-vindas manualmente
+ */
+router.post("/send-welcome", async (req: Request, res: Response) => {
+  try {
+    const { phone } = req.body;
+
+    if (!phone) {
+      return res.status(400).json({ error: "Phone number is required" });
+    }
+
+    await iptvFlowService.processMessage(phone, "oi");
+
+    logger.info(`📨 Mensagem de boas-vindas enviada para ${phone}`);
+    res.status(200).json({ success: true, message: "Welcome message sent" });
+  } catch (error) {
+    logger.error("❌ Erro ao enviar boas-vindas:", error);
+    res.status(500).json({ error: "Failed to send welcome message" });
+  }
+});
+
+/**
+ * POST /api/iptv/send-custom
+ * Enviar mensagem customizada
+ */
+router.post("/send-custom", async (req: Request, res: Response) => {
+  try {
+    const { phone, message } = req.body;
+
+    if (!phone || !message) {
+      return res.status(400).json({ error: "Phone and message are required" });
+    }
+
+    await whatsappService.sendText(phone, message);
+
+    logger.info(`📨 Mensagem customizada enviada para ${phone}`);
+    res.status(200).json({ success: true, message: "Message sent" });
+  } catch (error) {
+    logger.error("❌ Erro ao enviar mensagem customizada:", error);
+    res.status(500).json({ error: "Failed to send message" });
+  }
+});
+
+/**
+ * POST /api/iptv/send-bulk
+ * Enviar mensagens em massa
+ */
+router.post("/send-bulk", async (req: Request, res: Response) => {
+  try {
+    const { phones, message } = req.body;
+
+    if (!Array.isArray(phones) || !message) {
+      return res.status(400).json({ error: "Phones array and message are required" });
+    }
+
+    const results = [];
+
+    for (const phone of phones) {
+      try {
+        await whatsappService.sendText(phone, message);
+        results.push({ phone, status: "sent" });
+      } catch (error) {
+        results.push({ phone, status: "failed", error: String(error) });
+      }
+    }
+
+    logger.info(`📨 ${results.length} mensagens de massa enviadas`);
+    res.status(200).json({ success: true, results });
+  } catch (error) {
+    logger.error("❌ Erro ao enviar mensagens em massa:", error);
+    res.status(500).json({ error: "Failed to send bulk messages" });
+  }
+});
+
+/**
+ * GET /api/iptv/contact/:phone
+ * Obter informações do contato
+ */
+router.get("/contact/:phone", async (req: Request, res: Response) => {
+  try {
+    const { phone } = req.params;
+    const { PrismaClient } = require("@prisma/client");
+    const prisma = new PrismaClient();
+
+    const contact = await prisma.contact.findUnique({
+      where: { phone },
+      include: {
+        conversations: true,
+        subscriptions: { include: { plan: true } },
+      },
+    });
+
+    if (!contact) {
+      return res.status(404).json({ error: "Contact not found" });
+    }
+
+    res.status(200).json(contact);
+  } catch (error) {
+    logger.error("❌ Erro ao buscar contato:", error);
+    res.status(500).json({ error: "Failed to fetch contact" });
+  }
+});
+
+/**
+ * GET /api/iptv/stats
+ * Estatísticas gerais do chatbot
+ */
+router.get("/stats", async (req: Request, res: Response) => {
+  try {
+    const { PrismaClient } = require("@prisma/client");
+    const prisma = new PrismaClient();
+
+    const totalContacts = await prisma.contact.count();
+    const totalConversations = await prisma.conversation.count();
+    const totalMessages = await prisma.message.count();
+    const totalSubscriptions = await prisma.subscription.count({
+      where: { status: "active" },
+    });
+
+    res.status(200).json({
+      totalContacts,
+      totalConversations,
+      totalMessages,
+      activeSubscriptions: totalSubscriptions,
+    });
+  } catch (error) {
+    logger.error("❌ Erro ao buscar estatísticas:", error);
+    res.status(500).json({ error: "Failed to fetch stats" });
+  }
+});
+
+export default router;

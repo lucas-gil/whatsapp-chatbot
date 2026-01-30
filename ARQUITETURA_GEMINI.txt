@@ -1,0 +1,213 @@
+
+📊 ARQUITETURA VISUAL - GEMINI + VENDEDOR VIRTUAL
+
+═══════════════════════════════════════════════════════════════════════════
+
+                          🌍 INTERNET
+                              |
+                              ↓
+                    ┌──────────────────┐
+                    │  Google Gemini   │
+                    │      API         │
+                    └──────────────────┘
+                              ↑
+                              │
+                        generateAIResponse()
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+        ↓                     ↓                     ↓
+    
+    ┌────────────┐      ┌──────────────┐      ┌────────────┐
+    │   WhatsApp │      │  Painel Admin│      │  Endpoints │
+    │  Browser   │      │   Next.js    │      │   REST     │
+    └────────────┘      └──────────────┘      └────────────┘
+        ↓                     ↓                     ↓
+        │                     │                     │
+        └─────────────────────┼─────────────────────┘
+                              │
+                              ↓
+                    ┌──────────────────────────┐
+                    │   Node.js API Server     │
+                    │   (Express)              │
+                    │                          │
+                    │  Routes:                 │
+                    │  - /api/product/data     │
+                    │  - /api/ai/generate-resp │
+                    │  - /api/whatsapp/...     │
+                    └──────────────────────────┘
+                              │
+                    ┌─────────┴─────────┐
+                    │                   │
+                    ↓                   ↓
+            ┌──────────────┐    ┌──────────────┐
+            │   Gemini     │    │  Dados do    │
+            │  Config      │    │  Produto     │
+            │  (em memória)│    │  (em memória)│
+            └──────────────┘    └──────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+
+FLUXO DE CONFIGURAÇÃO:
+
+    Usuário (no Painel)
+          ↓
+    Preenche Formulário
+          ↓
+    Clica "Salvar"
+          ↓
+    POST /api/product/data
+          ↓
+    Salva em Memória (server)
+          ↓
+    ✅ Configurado!
+
+
+FLUXO DE RESPOSTA IA:
+
+    Cliente (WhatsApp)
+          ↓
+    Envia Mensagem
+          ↓
+    Recebida pela API
+          ↓
+    POST /api/ai/generate-response
+          ↓
+    Chama: generateAIResponse()
+          ↓
+    Conecta ao Gemini
+          ↓
+    Processa com Prompt
+          ↓
+    Retorna Resposta IA
+          ↓
+    Envia para Cliente
+          ↓
+    ✅ Cliente Recebe!
+
+═══════════════════════════════════════════════════════════════════════════
+
+COMPONENTES CRIADOS:
+
+1. src/gemini-config.js
+   ├─ GoogleGenerativeAI()
+   ├─ generateAIResponse()
+   ├─ updateProductData()
+   ├─ getProductData()
+   └─ VENDOR_PROMPT()
+
+2. src/ai-processor.js
+   ├─ processMessageWithAI()
+   └─ getAutoReplyWithAI()
+
+3. /apps/admin/src/app/product/page.tsx
+   ├─ Interface de Configuração
+   ├─ Formulário de Produto
+   └─ Seção de Teste
+
+4. whatsapp-web-server.js (modificado)
+   ├─ GET /api/product/data
+   ├─ POST /api/product/data
+   └─ POST /api/ai/generate-response
+
+5. Sidebar.tsx (modificado)
+   └─ + Menu "Configurar Produto"
+
+═══════════════════════════════════════════════════════════════════════════
+
+REGRAS DO VENDEDOR VIRTUAL (Prompt):
+
+    ┌────────────────────────────────────────┐
+    │         VENDEDOR VIRTUAL               │
+    ├────────────────────────────────────────┤
+    │                                        │
+    │ ✅ NUNCA deixa sem resposta            │
+    │    └─ Acolhimento + Perguntas         │
+    │                                        │
+    │ ✅ NÃO inventa dados                  │
+    │    └─ Só fala o que sabe              │
+    │                                        │
+    │ ✅ Persuasão ética                    │
+    │    └─ Destaca benefícios reais        │
+    │                                        │
+    │ ✅ CTA claro                          │
+    │    └─ Finaliza com ação               │
+    │                                        │
+    │ ✅ Respostas curtas                   │
+    │    └─ 0-3 emojis, linguagem simples   │
+    │                                        │
+    │ ✅ Segurança                          │
+    │    └─ Recusa pedidos ilegais          │
+    │                                        │
+    └────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+
+FLUXO DO USUÁRIO:
+
+    1. Abre Painel Admin
+       http://localhost:3001
+             ↓
+    2. Acessa Menu → "Configurar Produto"
+             ↓
+    3. Preenche Dados (Nome, Descrição, Preço, etc)
+             ↓
+    4. Clica "Salvar Configurações"
+             ↓
+    5. Vê seção "Testar Vendedor Virtual"
+             ↓
+    6. Digite uma pergunta
+             ↓
+    7. Clica "Testar Resposta"
+             ↓
+    8. Vê resposta IA gerada
+             ↓
+    ✅ PRONTO! Vendedor virtual funcionando!
+
+═══════════════════════════════════════════════════════════════════════════
+
+EXEMPLO DE RESPOSTA:
+
+    Input: "Qual é o preço?"
+       ↓
+    Vai para Gemini com:
+       - Contexto do produto
+       - Prompt de vendas
+       - Mensagem do cliente
+       ↓
+    Gemini processa:
+    "Você é vendedor de R$ 29,90/mês com..."
+    "Cliente perguntou: Qual é o preço?"
+       ↓
+    Output:
+    "Ótimo! 😊
+     Oferecemos a partir de R$ 29,90/mês com:
+     ✅ Todos os canais
+     ✅ Filmes em 4K
+     ✅ Esportes ao vivo
+     
+     Qual seria seu perfil? (Básico/Completo)"
+
+═══════════════════════════════════════════════════════════════════════════
+
+LIMITES:
+
+- Mensagem cliente: 500 caracteres
+- Resposta IA: 1000 caracteres (limite WhatsApp)
+- Timeout: 120 segundos
+
+═══════════════════════════════════════════════════════════════════════════
+
+STATUS:
+
+✅ Backend ........................ Pronto
+✅ Frontend ....................... Pronto
+✅ Integração Gemini .............. Pronta
+✅ Endpoints ...................... Prontos
+✅ Menu Admin ..................... Atualizado
+✅ Documentação ................... Completa
+
+═══════════════════════════════════════════════════════════════════════════
+
+Versão: 1.0.0
+Data: 26/01/2026

@@ -1,0 +1,9 @@
+2026/01/26-22:01:14.842 3ba0 Reusing MANIFEST C:\Users\tranf\whatsapp-chatbot\apps\api\whatsapp-auth\session_1769457103236\session-session_1769457103236\Default\Local Storage\leveldb/MANIFEST-000001
+2026/01/26-22:01:14.848 3ba0 Recovering log #3
+2026/01/26-22:01:14.851 3ba0 Reusing old log C:\Users\tranf\whatsapp-chatbot\apps\api\whatsapp-auth\session_1769457103236\session-session_1769457103236\Default\Local Storage\leveldb/000003.log 
+2026/01/26-22:02:14.856 3078 Level-0 table #5: started
+2026/01/26-22:02:14.861 3078 Level-0 table #5: 18080 bytes OK
+2026/01/26-22:02:14.864 3078 Delete type=0 #3
+2026/01/28-13:06:51.806 3078 Level-0 table #7: started
+2026/01/28-13:06:51.814 3078 Level-0 table #7: 14938 bytes OK
+2026/01/28-13:06:51.818 3078 Delete type=0 #4

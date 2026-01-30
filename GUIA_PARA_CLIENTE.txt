@@ -1,0 +1,116 @@
+🚀 GUIA DE INSTALAÇÃO PARA O CLIENTE
+
+═══════════════════════════════════════════════════════════════════════════
+
+PASSO 1: INSTALAR NODE.JS
+
+Opção A: AUTOMÁTICO (RECOMENDADO)
+──────────────────────────────────
+
+1. Abra a pasta do sistema descompactado
+   └─ whatsapp-chatbot/
+
+2. Procure pelo arquivo: INSTALAR_NODEJS.bat
+
+3. Clique com DIREITO no arquivo
+
+4. Selecione: "Executar como administrador"
+
+5. Aguarde até aparecer "SUCESSO"
+
+6. Pronto! Node.js está instalado! ✅
+
+
+Opção B: MANUAL
+───────────────
+
+1. Visite: https://nodejs.org/
+
+2. Clique em "LTS" (versão estável)
+
+3. Faça download e instale normalmente
+
+4. Na instalação, deixe as opções padrão
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+PASSO 2: INSTALAR DEPENDÊNCIAS
+
+Abra o PowerShell ou CMD na pasta do sistema:
+
+  cd C:\Caminho\Para\whatsapp-chatbot\apps\api
+  npm install
+
+Aguarde... (pode levar 2-5 minutos)
+
+Depois:
+
+  cd C:\Caminho\Para\whatsapp-chatbot\apps\admin
+  npm install
+
+Aguarde de novo...
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+PASSO 3: INICIAR O SISTEMA
+
+Em dois PowerShell DIFERENTES:
+
+Terminal 1 (API):
+  cd C:\Caminho\Para\whatsapp-chatbot\apps\api
+  node whatsapp-web-server.js
+
+Terminal 2 (Admin):
+  cd C:\Caminho\Para\whatsapp-chatbot\apps\admin
+  npm run dev
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+PASSO 4: ACESSAR
+
+No navegador:
+  http://localhost:3001
+
+Se aparecer o painel admin, deu certo! ✅
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+RESUMO RÁPIDO:
+
+1. Extrair ZIP
+2. Executar: INSTALAR_NODEJS.bat (com direito de admin)
+3. npm install (em apps/api)
+4. npm install (em apps/admin)
+5. Abrir 2 PowerShells
+6. node whatsapp-web-server.js (no primeiro)
+7. npm run dev (no segundo)
+8. Acessar: http://localhost:3001
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+PROBLEMAS?
+
+❌ "Node não encontrado"
+└─ Reinicie o computador após instalar Node.js
+
+❌ "npm: command not found"
+└─ Reinstale Node.js corretamente
+
+❌ "Port 3000/3001 já em uso"
+└─ Feche outras aplicações que usam essas portas
+
+❌ "Arquivo não encontrado"
+└─ Certifique-se de extrair TODO o ZIP corretamente
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+SUCESSO = Ver o painel em: http://localhost:3001 ✅
+
+
+═══════════════════════════════════════════════════════════════════════════

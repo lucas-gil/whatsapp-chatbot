@@ -1,0 +1,166 @@
+# ⚡ COMECE AQUI - GEMINI + VENDEDOR VIRTUAL
+
+## 🎯 5 Passos para Ativar
+
+### 1️⃣ Obter Chave Gemini (2 min)
+```
+1. Abra: https://aistudio.google.com/
+2. Clique: "Get API Key" (canto superior)
+3. Selecione: "Create API key in new project"
+4. Copie: A chave gerada
+```
+
+### 2️⃣ Adicionar ao Sistema (1 min)
+Windows PowerShell:
+```powershell
+# Na pasta raiz do projeto
+$env:GEMINI_API_KEY = "cole_sua_chave_aqui"
+
+# OU edite arquivo: apps/api/.env
+```
+
+### 3️⃣ Iniciar o Sistema (30 seg)
+Terminal já tem servidor rodando em:
+- 🟢 API: http://localhost:3000
+- 🟢 Admin: http://localhost:3001
+
+### 4️⃣ Configurar Produto (5 min)
+```
+1. Abra: http://localhost:3001
+2. Clique: Menu → "Configurar Produto"
+3. Preencha:
+   - Nome da loja
+   - Descrição do produto
+   - Preço
+   - Prazo
+   - Garantia
+4. Clique: "Salvar Configurações"
+```
+
+### 5️⃣ Testar a IA (2 min)
+```
+Na mesma página, seção "🤖 Testar Vendedor Virtual":
+1. Digite: "Qual é o preço?"
+2. Clique: "Testar Resposta"
+3. Veja a resposta automática do vendedor
+```
+
+---
+
+## 🎬 Exemplo Completo
+
+### Sua Loja
+```
+Nome: Infinity One IPTV
+Descrição: Serviço IPTV com +5000 canais, 
+           filmes em 4K, esportes ao vivo,
+           trocas rápidas e suporte 24h
+Preço: R$ 29,90/mês
+Prazo: Ativação imediata
+Garantia: 7 dias de garantia ou devolução
+Estoque: Em estoque
+```
+
+### Cliente Pergunta
+```
+"Funciona em Roku?"
+```
+
+### IA Responde
+```
+Ótimo! 😊
+
+Sim, funciona em Roku! Também funciona em:
+✅ Smart TV Samsung/LG
+✅ Firestick
+✅ Computador
+✅ Celular
+
+Quer ativar agora?
+```
+
+---
+
+## 📍 Onde Encontrar Cada Coisa
+
+| Funcionalidade | Local |
+|---|---|
+| Painel Configuração | http://localhost:3001 → Menu → "Configurar Produto" |
+| API de Produtos | http://localhost:3000/api/product/data |
+| API de Respostas IA | http://localhost:3000/api/ai/generate-response |
+| Docs Completos | Arquivo: `GEMINI_GUIA_COMPLETO.md` |
+| Sumário Técnico | Arquivo: `GEMINI_RESUMO_MUDANCAS.md` |
+
+---
+
+## ✅ Checklist Rápido
+
+- [ ] Chave Gemini obtida
+- [ ] Variável de ambiente `GEMINI_API_KEY` configurada
+- [ ] Servidor API rodando (localhost:3000)
+- [ ] Painel Admin rodando (localhost:3001)
+- [ ] Dados do produto salvos
+- [ ] Teste de IA funcionando
+- [ ] Resposta gerada com sucesso
+
+---
+
+## 🆘 Problema? Tente Isto
+
+### API não responde
+```powershell
+# Reinicie a API
+Get-Process node | Stop-Process -Force
+cd apps/api
+node whatsapp-web-server.js
+```
+
+### Gemini diz "erro de autenticação"
+```powershell
+# Verifique a chave
+echo $env:GEMINI_API_KEY
+
+# Se vazio, configure de novo:
+$env:GEMINI_API_KEY = "sua_chave"
+```
+
+### Painel não carrega
+```
+1. Limpe cache: Ctrl+Shift+Del
+2. Recarregue: F5
+3. Se persistir, reinicie admin:
+   npm run dev
+```
+
+---
+
+## 🎓 Dicas Profissionais
+
+1. **Descrição Completa** = Melhores Respostas
+   - Quanto mais detalha, melhor a IA entende
+
+2. **Atualize Sempre** 
+   - Mudou preço? Atualize no painel
+   - Promoção? Adicione na descrição
+
+3. **Teste Antes**
+   - Use a seção de teste
+   - Veja se gosta das respostas
+
+4. **Monitore**
+   - Guarde prints das boas respostas
+   - Melhore as ruins alterando a descrição
+
+---
+
+## 🚀 Próxima Etapa (Opcional)
+
+Quer usar a IA para responder **automaticamente no WhatsApp**?
+
+Arquivo: `GEMINI_GUIA_COMPLETO.md` → Seção "Integração com WhatsApp Automático"
+
+---
+
+**Pronto! 🎉 Você tem um vendedor virtual 24/7 com IA!**
+
+Dúvidas? Consulte o guia completo: `GEMINI_GUIA_COMPLETO.md`

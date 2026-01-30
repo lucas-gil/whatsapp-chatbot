@@ -1,0 +1,118 @@
+import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import { PrismaClient } from "@prisma/client";
+import { logger } from "@/utils/logger";
+
+const prisma = new PrismaClient();
+
+export async function plansRoutes(app: FastifyInstance) {
+  /**
+   * GET /api/plans - Listar planos
+   */
+  app.get("/api/plans", async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const plans = await prisma.plan.findMany({
+        where: { active: true },
+        orderBy: { order: "asc" },
+      });
+
+      return reply.send(plans);
+    } catch (error) {
+      logger.error("❌ Erro ao listar planos:", error);
+      return reply.code(500).send({ error: "Erro ao listar planos" });
+    }
+  });
+
+  /**
+   * GET /api/plans/:id - Obter detalhes do plano
+   */
+  app.get("/api/plans/:id", async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const { id } = request.params as { id: string };
+
+      const plan = await prisma.plan.findUnique({
+        where: { id },
+      });
+
+      if (!plan) {
+        return reply.code(404).send({ error: "Plano não encontrado" });
+      }
+
+      return reply.send(plan);
+    } catch (error) {
+      logger.error("❌ Erro ao obter plano:", error);
+      return reply.code(500).send({ error: "Erro ao obter plano" });
+    }
+  });
+
+  /**
+   * POST /api/subscriptions - Criar assinatura (teste grátis)
+   */
+  app.post(
+    "/api/subscriptions",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const { contactId, planId } = request.body as any;
+
+        // Verificar se contato já tem assinatura ativa
+        const existing = await prisma.subscription.findFirst({
+          where: {
+            contactId,
+            status: { in: ["active", "trial"] },
+          },
+        });
+
+        if (existing) {
+          return reply.code(400).send({
+            error: "Contato já possui uma assinatura ativa",
+          });
+        }
+
+        // Buscar plano
+        const plan = await prisma.plan.findUnique({ where: { id: planId } });
+        if (!plan) {
+          return reply.code(404).send({ error: "Plano não encontrado" });
+        }
+
+        // Criar assinatura
+        const subscription = await prisma.subscription.create({
+          data: {
+            contactId,
+            planId,
+            status: "trial",
+            trialEndsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 dias
+          },
+          include: { plan: true },
+        });
+
+        logger.info(`✅ Assinatura criada: ${subscription.id}`);
+        return reply.code(201).send(subscription);
+      } catch (error) {
+        logger.error("❌ Erro ao criar assinatura:", error);
+        return reply.code(500).send({ error: "Erro ao criar assinatura" });
+      }
+    }
+  );
+
+  /**
+   * GET /api/contacts/:contactId/subscriptions - Assinaturas do contato
+   */
+  app.get(
+    "/api/contacts/:contactId/subscriptions",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const { contactId } = request.params as { contactId: string };
+
+        const subscriptions = await prisma.subscription.findMany({
+          where: { contactId },
+          include: { plan: true },
+          orderBy: { createdAt: "desc" },
+        });
+
+        return reply.send(subscriptions);
+      } catch (error) {
+        logger.error("❌ Erro ao listar assinaturas:", error);
+        return reply.code(500).send({ error: "Erro ao listar assinaturas" });
+      }
+    }
+  );
+}

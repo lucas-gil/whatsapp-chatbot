@@ -1,0 +1,83 @@
+🎉 SEU SISTEMA ESTÁ RODANDO!
+═════════════════════════════════════════════════════════════
+
+📊 DASHBOARD:     http://localhost:3000
+🤖 API:           http://localhost:3000/api  
+❤️  HEALTH:        http://localhost:3000/health
+
+═════════════════════════════════════════════════════════════
+
+⚡ TESTE RÁPIDO (PowerShell):
+
+# 1. Health Check
+Invoke-WebRequest -Uri "http://localhost:3000/health" -UseBasicParsing | ForEach-Object { $_.Content | ConvertFrom-Json }
+
+# 2. Listar contatos
+Invoke-WebRequest -Uri "http://localhost:3000/api/contacts" -UseBasicParsing | ForEach-Object { $_.Content | ConvertFrom-Json }
+
+# 3. Enviar mensagem
+$body = @{to="5511987654321"; text="Olá!"} | ConvertTo-Json
+Invoke-WebRequest -Uri "http://localhost:3000/api/message" -Method POST -Body $body -ContentType "application/json" -UseBasicParsing | ForEach-Object { $_.Content | ConvertFrom-Json }
+
+═════════════════════════════════════════════════════════════
+
+🔐 PRÓXIMOS PASSOS:
+
+1. EDITAR .env (c:\Users\tranf\whatsapp-chatbot\.env)
+   
+   ├─ WHATSAPP_PHONE_ID = seu ID
+   ├─ WHATSAPP_ACCESS_TOKEN = seu token
+   ├─ WHATSAPP_WEBHOOK_VERIFY_TOKEN = seu token
+   ├─ OPENAI_API_KEY = sua chave (se quiser IA)
+   └─ MERCADOPAGO_ACCESS_TOKEN = seu token (se quiser pagamentos)
+
+2. TESTAR WEBHOOK DO WHATSAPP
+   
+   URL: http://seu-dominio-publico.com/webhook/whatsapp
+   Verify Token: (igual ao definido em .env)
+
+3. ENVIAR PRIMEIRA MENSAGEM
+   
+   Envie uma mensagem WhatsApp para seu número
+   Ela chegará em: http://localhost:3000/webhook/whatsapp
+
+═════════════════════════════════════════════════════════════
+
+📂 ARQUIVO .env (localização):
+
+c:\Users\tranf\whatsapp-chatbot\.env
+
+═════════════════════════════════════════════════════════════
+
+✅ FUNÇÕES DISPONÍVEIS AGORA:
+
+✓ Receber mensagens WhatsApp
+✓ Responder automaticamente
+✓ Gerenciar contatos
+✓ Salvar histórico de conversas
+✓ Dashboard admin em tempo real
+✓ Webhooks validados
+
+═════════════════════════════════════════════════════════════
+
+⚙️ ARQUIVOS CRIADOS:
+
+✓ server.cjs - Servidor HTTP (rodando)
+✓ admin.html - Dashboard (http://localhost:3000)
+✓ .env - Configurações
+✓ dev.db - Banco de dados SQLite
+✓ schema.prisma - Modelos de dados
+
+═════════════════════════════════════════════════════════════
+
+🎯 PARA MANTER RODANDO:
+
+Deixe o terminal aberto e o servidor continuará funcionando.
+
+Para parar: Pressione Ctrl+C no terminal do servidor
+
+═════════════════════════════════════════════════════════════
+
+🚀 SUCESSO! Seu chatbot está online!
+
+Qualquer dúvida, consulte SETUP.md ou README.md

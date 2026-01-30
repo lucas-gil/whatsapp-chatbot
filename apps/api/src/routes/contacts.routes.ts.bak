@@ -1,0 +1,147 @@
+import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
+import { PrismaClient } from "@prisma/client";
+import { logger } from "@/utils/logger";
+
+const prisma = new PrismaClient();
+
+export async function contactRoutes(app: FastifyInstance) {
+  /**
+   * GET /api/contacts - Listar contatos
+   */
+  app.get("/api/contacts", async (request: FastifyRequest, reply: FastifyReply) => {
+    try {
+      const { status, page = 1, limit = 20 } = request.query as any;
+
+      const where = status ? { status } : {};
+      const skip = (parseInt(page) - 1) * parseInt(limit);
+
+      const [contacts, total] = await Promise.all([
+        prisma.contact.findMany({
+          where,
+          skip,
+          take: parseInt(limit),
+          include: {
+            conversations: {
+              take: 1,
+              orderBy: { createdAt: "desc" },
+            },
+            subscriptions: {
+              take: 1,
+              orderBy: { createdAt: "desc" },
+            },
+          },
+          orderBy: { updatedAt: "desc" },
+        }),
+        prisma.contact.count({ where }),
+      ]);
+
+      return reply.send({
+        data: contacts,
+        pagination: {
+          total,
+          page: parseInt(page),
+          limit: parseInt(limit),
+          totalPages: Math.ceil(total / parseInt(limit)),
+        },
+      });
+    } catch (error) {
+      logger.error("❌ Erro ao listar contatos:", error);
+      return reply.code(500).send({ error: "Erro ao listar contatos" });
+    }
+  });
+
+  /**
+   * GET /api/contacts/:phone - Obter detalhes do contato
+   */
+  app.get(
+    "/api/contacts/:phone",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const { phone } = request.params as { phone: string };
+
+        const contact = await prisma.contact.findUnique({
+          where: { phone },
+          include: {
+            conversations: {
+              include: { messages: { orderBy: { createdAt: "desc" } } },
+            },
+            subscriptions: {
+              include: { plan: true },
+            },
+            tickets: true,
+          },
+        });
+
+        if (!contact) {
+          return reply.code(404).send({ error: "Contato não encontrado" });
+        }
+
+        return reply.send(contact);
+      } catch (error) {
+        logger.error("❌ Erro ao obter contato:", error);
+        return reply.code(500).send({ error: "Erro ao obter contato" });
+      }
+    }
+  );
+
+  /**
+   * PATCH /api/contacts/:phone - Atualizar contato
+   */
+  app.patch(
+    "/api/contacts/:phone",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const { phone } = request.params as { phone: string };
+        const { name, email, device, status } = request.body as any;
+
+        const contact = await prisma.contact.update({
+          where: { phone },
+          data: {
+            ...(name && { name }),
+            ...(email && { email }),
+            ...(device && { device }),
+            ...(status && { status }),
+          },
+        });
+
+        logger.info(`✏️ Contato ${phone} atualizado`);
+        return reply.send(contact);
+      } catch (error) {
+        logger.error("❌ Erro ao atualizar contato:", error);
+        return reply.code(500).send({ error: "Erro ao atualizar contato" });
+      }
+    }
+  );
+
+  /**
+   * GET /api/contacts/:phone/conversations - Histórico de conversas
+   */
+  app.get(
+    "/api/contacts/:phone/conversations",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        const { phone } = request.params as { phone: string };
+
+        const contact = await prisma.contact.findUnique({ where: { phone } });
+        if (!contact) {
+          return reply.code(404).send({ error: "Contato não encontrado" });
+        }
+
+        const conversations = await prisma.conversation.findMany({
+          where: { contactId: contact.id },
+          include: {
+            messages: {
+              orderBy: { createdAt: "asc" },
+            },
+          },
+          orderBy: { createdAt: "desc" },
+        });
+
+        return reply.send(conversations);
+      } catch (error) {
+        logger.error("❌ Erro ao obter conversas:", error);
+        return reply.code(500).send({ error: "Erro ao obter conversas" });
+      }
+    }
+  );
+}

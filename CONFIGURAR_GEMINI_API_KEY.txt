@@ -1,0 +1,160 @@
+🔑 COMO CONFIGURAR A CHAVE GEMINI - PASSO A PASSO
+
+═══════════════════════════════════════════════════════════════════════════
+
+⚠️  SEM ISSO, A IA NÃO VAI FUNCIONAR!
+
+═══════════════════════════════════════════════════════════════════════════
+
+PASSO 1: OBTER A CHAVE (2 MIN)
+
+  1. Abra: https://aistudio.google.com/
+  
+  2. No canto superior direito, clique em: "Get API Key"
+  
+  3. Selecione: "Create API key in new project"
+  
+  4. Copie a chave que aparecerá
+     (Você vai colar essa chave depois!)
+  
+  Exemplo:
+  AIzaSyD...xXxXxXxXxXxXxXxXxXxXx  ← Esta é sua chave!
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+PASSO 2: CONFIGURAR NO WINDOWS (1 MIN)
+
+  OPÇÃO A: Usar PowerShell (RECOMENDADO)
+  ─────────────────────────────────────
+  
+  1. Abra PowerShell (clique com direito na pasta, abra PowerShell)
+  
+  2. Cole este comando:
+  
+     $env:GEMINI_API_KEY = "cole_sua_chave_aqui"
+  
+  Exemplo prático:
+  
+     $env:GEMINI_API_KEY = "AIzaSyD...xXxXxXxXxXxXxXxXxXxXx"
+  
+  3. Pressione ENTER
+  
+  4. Para confirmar, execute:
+  
+     echo $env:GEMINI_API_KEY
+  
+  5. Se aparecer sua chave, ✅ FUNCIONOU!
+
+
+  OPÇÃO B: Usar arquivo .env (ALTERNATIVA)
+  ─────────────────────────────────────────
+  
+  1. Abra o arquivo:
+     c:\Users\tranf\whatsapp-chatbot\apps\api\.env
+     
+     (Se não existir, crie um novo arquivo de texto e renomeie)
+  
+  2. Adicione estas linhas:
+  
+     GEMINI_API_KEY=sua_chave_aqui
+  
+  Exemplo:
+  
+     GEMINI_API_KEY=AIzaSyD...xXxXxXxXxXxXxXxXxXxXx
+  
+  3. Salve (Ctrl+S)
+  
+  4. Reinicie o servidor
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+VERIFICAR SE FUNCIONOU
+
+  Execute no PowerShell:
+  
+     echo $env:GEMINI_API_KEY
+  
+  Se aparecer sua chave → ✅ SUCESSO!
+  Se não aparecer nada → ❌ Refaça os passos
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+E DEPOIS?
+
+  1. Reinicie os servidores:
+     
+     Feche tudo e execute novamente:
+     - cd apps/api && node whatsapp-web-server.js
+     - cd apps/admin && npm run dev
+  
+  2. Acesse:
+     
+     http://localhost:3001 → Menu → "Configurar Produto"
+  
+  3. Configure seu produto
+  
+  4. Teste a IA
+  
+  5. ✅ PRONTO!
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+⚠️  DICAS IMPORTANTES
+
+  • A chave é PESSOAL e SECRETA - não compartilhe!
+  
+  • Cada chave tem limite gratuito (centenas de requisições/mês)
+  
+  • Se usar muita IA, pode cobrar (mas avisa antes)
+  
+  • Guarde a chave em lugar seguro
+  
+  • Se vazar, delete a chave e crie uma nova em:
+    https://aistudio.google.com/
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+ERRO? COMO RESOLVER
+
+  ❌ "Erro ao gerar resposta"
+     └─ Verifique se configurou a chave
+     └─ Execute: echo $env:GEMINI_API_KEY
+  
+  ❌ "Chave não reconhecida"
+     └─ Copie a chave INTEIRA sem espaços extras
+     └─ Cole novamente no PowerShell
+  
+  ❌ "API limite excedido"
+     └─ Espere 24 horas ou
+     └─ Crie nova chave em https://aistudio.google.com/
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+CHECKLIST
+
+  ☑️  Abri https://aistudio.google.com/
+  ☑️  Cliquei em "Get API Key"
+  ☑️  Copiei a chave
+  ☑️  Colei no PowerShell: $env:GEMINI_API_KEY = "..."
+  ☑️  Testei com: echo $env:GEMINI_API_KEY
+  ☑️  Vejo a chave (✅ PRONTO!)
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+PRÓXIMO PASSO
+
+  Depois de configurar a chave, abra:
+  
+  GEMINI_COMECE_AQUI.txt
+  
+  E siga os outros 4 passos!
+
+
+═══════════════════════════════════════════════════════════════════════════
