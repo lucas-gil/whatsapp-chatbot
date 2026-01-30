@@ -11,7 +11,6 @@ import {
   BarChart3,
   ArrowRight,
   Smartphone,
-  Smartphone,
   Cpu,
   ToggleRight,
   ArrowUpRight,
