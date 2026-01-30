@@ -1,6 +1,8 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import QRCode from "qrcode";
+import fs from "fs";
+import path from "path";
 
 const app = Fastify({ logger: true });
 
@@ -9,17 +11,24 @@ app.register(cors, { origin: true });
 // Armazenar conexões
 const connections = new Map<string, any>();
 
-// ✅ Rota raiz
-app.get("/", async () => {
-  return { 
-    message: "WhatsApp Chatbot API",
-    status: "online",
-    version: "1.0.0",
-    endpoints: {
-      health: "/health",
-      whatsapp: "/api/whatsapp/*"
-    }
-  };
+// ✅ Servir HTML da raiz
+app.get("/", async (request, reply) => {
+  try {
+    const htmlPath = path.join(__dirname, "../public/index.html");
+    const html = fs.readFileSync(htmlPath, "utf-8");
+    reply.header("Content-Type", "text/html");
+    return reply.send(html);
+  } catch (error) {
+    return { 
+      message: "WhatsApp Chatbot API",
+      status: "online",
+      version: "1.0.0",
+      endpoints: {
+        health: "/health",
+        whatsapp: "/api/whatsapp/*"
+      }
+    };
+  }
 });
 
 // ✅ Health Check

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Chatbot API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: white;
+            border-radius: 10px;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .status {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .endpoint {
+            background: #f3f4f6;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+        
+        .endpoint-method {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #764ba2;
+        }
+        
+        .response {
+            background: #1f2937;
+            color: #10b981;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 WhatsApp Chatbot API</h1>
+            <p>Sistema de automação WhatsApp com IA</p>
+            <span class="status">✓ ONLINE</span>
+        </header>
+        
+        <div class="card">
+            <h2>📊 Status da API</h2>
+            <button onclick="checkHealth()">Verificar Status</button>
+            <div id="healthResponse" class="response" style="display:none;"></div>
+        </div>
+        
+        <div class="card">
+            <h2>🔌 Endpoints Disponíveis</h2>
+            
+            <div class="endpoint">
+                <div class="endpoint-method">GET</div>
+                <div class="endpoint-path">/health</div>
+                <p style="margin-top: 5px; color: #666; font-size: 0.9em;">Verifica se a API está rodando</p>
+                <button onclick="testEndpoint('/health', 'GET')">Testar</button>
+                <div id="response-health" class="response" style="display:none;"></div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-method">POST</div>
+                <div class="endpoint-path">/api/whatsapp/start-session</div>
+                <p style="margin-top: 5px; color: #666; font-size: 0.9em;">Gera QR Code para conectar WhatsApp</p>
+                <button onclick="testEndpoint('/api/whatsapp/start-session', 'POST')">Testar</button>
+                <div id="response-session" class="response" style="display:none;"></div>
+            </div>
+            
+            <div class="endpoint">
+                <div class="endpoint-method">GET</div>
+                <div class="endpoint-path">/api/whatsapp/status/:sessionId</div>
+                <p style="margin-top: 5px; color: #666; font-size: 0.9em;">Verifica status da sessão</p>
+                <input type="text" id="sessionId" placeholder="Cole o sessionId aqui" style="width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px;">
+                <button onclick="testEndpoint('/api/whatsapp/status/test', 'GET')">Testar</button>
+                <div id="response-status" class="response" style="display:none;"></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>📝 Informações</h2>
+            <p><strong>Versão:</strong> 1.0.0</p>
+            <p><strong>Linguagem:</strong> TypeScript + Node.js</p>
+            <p><strong>Framework:</strong> Fastify</p>
+            <p><strong>Status:</strong> ✅ Produção</p>
+        </div>
+        
+        <div class="footer">
+            <p>WhatsApp Chatbot - Powered by Node.js & Fastify</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">© 2026 - Todos os direitos reservados</p>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = '';
+        
+        async function testEndpoint(endpoint, method) {
+            const responseDiv = document.getElementById('response-' + endpoint.split('/').pop().split(':')[0]);
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = '⏳ Carregando...';
+            
+            try {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                };
+                
+                const response = await fetch(API_BASE + endpoint, options);
+                const data = await response.json();
+                
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+                responseDiv.style.color = '#10b981';
+            } catch (error) {
+                responseDiv.textContent = '❌ Erro: ' + error.message;
+                responseDiv.style.color = '#ef4444';
+            }
+        }
+        
+        async function checkHealth() {
+            const responseDiv = document.getElementById('healthResponse');
+            responseDiv.style.display = 'block';
+            responseDiv.textContent = '⏳ Verificando...';
+            
+            try {
+                const response = await fetch(API_BASE + '/health');
+                const data = await response.json();
+                
+                responseDiv.textContent = '✅ API Funcionando Normalmente\n\n' + JSON.stringify(data, null, 2);
+                responseDiv.style.color = '#10b981';
+            } catch (error) {
+                responseDiv.textContent = '❌ API Indisponível: ' + error.message;
+                responseDiv.style.color = '#ef4444';
+            }
+        }
+    </script>
+</body>
+</html>
