@@ -13,4 +13,4 @@ WORKDIR /app/apps/api
 
 EXPOSE 3000
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "server.js"]

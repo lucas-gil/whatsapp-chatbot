@@ -1,12 +1,38 @@
 const express = require('express');
 const cors = require('cors');
 const QRCode = require('qrcode');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+// ===== SERVIR ARQUIVOS ESTÁTICOS =====
+app.use(express.static(path.join(__dirname, '../../public')));
+
+// ===== ROTAS PARA O PAINEL =====
+// Rota para /admin -> admin.html
+app.get('/admin', (req, res) => {
+  const adminPath = path.join(__dirname, '../../public/admin.html');
+  if (fs.existsSync(adminPath)) {
+    res.sendFile(adminPath);
+  } else {
+    res.status(404).send('Painel admin não encontrado');
+  }
+});
+
+// Rota para /painel -> admin.html (alternativa)
+app.get('/painel', (req, res) => {
+  const adminPath = path.join(__dirname, '../../public/admin.html');
+  if (fs.existsSync(adminPath)) {
+    res.sendFile(adminPath);
+  } else {
+    res.status(404).send('Painel admin não encontrado');
+  }
+});
 
 // ===== DADOS DO SISTEMA =====
 const connections = new Map();
@@ -324,6 +350,13 @@ app.get('/health', (req, res) => {
 
 // ===== HTML HOME =====
 app.get('/', (req, res) => {
+  // Tenta servir admin.html primeiro
+  const adminPath = path.join(__dirname, '../../public/admin.html');
+  if (fs.existsSync(adminPath)) {
+    return res.sendFile(adminPath);
+  }
+  
+  // Se não existir, retorna HTML de fallback
   const html = `<!DOCTYPE html>
 <html>
 <head>
