@@ -31,6 +31,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
 
 # Rodar ambos os serviços
-CMD ["sh", "-c", "cd /app/apps/api && npm start & sleep 2 && cd /app/apps/admin && npm start -p 3001"]
+CMD ["sh", "-c", "cd /app/apps/api && npm start & sleep 2 && cd /app/apps/admin && PORT=3001 npm start"]
 
 
