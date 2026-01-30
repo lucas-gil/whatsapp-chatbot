@@ -2,14 +2,20 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY apps/api/package.json apps/api/package-lock.json ./
+# Copiar todo o repositório primeiro
+COPY . .
 
+# Se está em monorepo, instalar raiz
+RUN npm install 2>/dev/null || true
+
+# Navegar para API e instalar
+WORKDIR /app/apps/api
 RUN npm install
 
-COPY apps/api/src ./src
-COPY apps/api/tsconfig.json ./
-
+# Build
 RUN npm run build
+
+WORKDIR /app/apps/api
 
 EXPOSE 3000
 
