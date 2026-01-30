@@ -6,8 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "dev": "node server.js",
-    "build": "echo 'Build com server-prod.js puro'",
-    "start": "node server-prod.js",
+    "build": "echo 'Build simples'",
+    "start": "node server.js",
     "db:migrate": "prisma migrate deploy",
     "db:push": "prisma db push",
     "db:seed": "node dist/prisma/seed.js",
