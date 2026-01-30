@@ -2,11 +2,14 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY . .
+COPY apps/api/package.json apps/api/package-lock.json ./
 
-RUN npm install && npm run build -w apps/api
+RUN npm install
 
-WORKDIR /app/apps/api
+COPY apps/api/src ./src
+COPY apps/api/tsconfig.json ./
+
+RUN npm run build
 
 EXPOSE 3000
 
