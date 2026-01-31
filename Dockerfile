@@ -15,6 +15,10 @@ RUN npm install --production
 WORKDIR /app/apps/api
 RUN npm install --production
 
+# Build do Proxy
+WORKDIR /app/apps/proxy
+RUN npm install --production
+
 # Build do Admin (Next.js)
 WORKDIR /app/apps/admin
 RUN npm install
@@ -23,7 +27,7 @@ RUN npm run build
 # Volta para app
 WORKDIR /app
 
-EXPOSE 3000 3001
+EXPOSE 80 3000 3001
 
 # Carregar variáveis de ambiente
 ENV PORT=3000
@@ -33,7 +37,7 @@ ENV NODE_ENV=production
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
 
-# Rodar ambos os serviços
-CMD ["sh", "-c", "cd /app/apps/api && PORT=3000 npm start & sleep 3 && cd /app/apps/admin && PORT=3001 npm start"]
+# Rodar todos: Proxy (80), API (3000) e Admin (3001)
+CMD ["sh", "-c", "cd /app/apps/proxy && npm start & cd /app/apps/api && PORT=3000 npm start & sleep 3 && cd /app/apps/admin && PORT=3001 npm start"]
 
 
