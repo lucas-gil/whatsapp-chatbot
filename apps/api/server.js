@@ -409,6 +409,19 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   `);
 });
 
+// ===== SERVIR ADMIN (NEXT.JS) =====
+// Serve static files do Admin build
+app.use(express.static(path.join(__dirname, '../admin/.next/static'), { maxAge: '1d' }));
+app.use(express.static(path.join(__dirname, '../admin/public')));
+
+// Rota catch-all para Next.js (SPA)
+app.get('*', (req, res) => {
+  // Se não for /api, serve o Admin
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, '../admin/.next/server/app.js'));
+  }
+});
+
 // Graceful shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM recebido, encerrando...');
